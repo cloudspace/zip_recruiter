@@ -1,6 +1,6 @@
 # ZipRecruiter
 
-TODO: Write a gem description
+Provides a CLI and ruby interface to the ZipRecruiter Job Alerts API.
 
 ## Installation
 
@@ -18,7 +18,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Run the following to display CLI usage:
+
+    $ zip_recruiter
+
+Additionally, you may use the ZipRecruiter::API class directly in a ruby script.
+
+    require 'zip_recruiter'
 
 ## Contributing
 
