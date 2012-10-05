@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'zip_recruiter/cli'
+ZipRecruiter::CLI.start
