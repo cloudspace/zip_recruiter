@@ -27,11 +27,18 @@ module ZipRecruiter
 
         case action
         when :subscribe, :unsubscribe
+          filepath = File.expand_path(arg.to_s)
+          if !File.exists?(filepath)
+            raise filepath + " does not exist."
+          end
+
           c.multipart_form_post = true
-          c.http_post(Curl::PostField.file('content', arg.to_s))
+          c.http_post(Curl::PostField.file('content', filepath.to_s)) # this calls perform
+
         when :status
           c.url += "/#{arg.to_s}"
           c.perform
+
         else
           raise "Unknown action \"#{action.to_s}\"."
         end
