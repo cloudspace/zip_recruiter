@@ -2,72 +2,21 @@ require 'curb'
 require 'zip_recruiter'
 
 module ZipRecruiter
-  class API
-    @@api_key = ''
+  @@api_key = ''
 
+  class API
     ##
     # Sets the API key
-    #
-    # This must be set before attempting to +perform_action+ anything.
     #
     def self.api_key=(api_key)
       @@api_key = api_key
     end
 
     ##
-    # Performs the specified API action.
+    # Gets the API key
     #
-    # This will perform the specified API action. The action must be one of:
-    #
-    # * +subscribe+
-    # * +unsubscribe+
-    # * +status+
-    #
-    # The +subscribe+ and +unsubscribe+ actions require an argument that is the
-    # path to a CSV file. The +status+ action requires an argument that is the
-    # task ID of a previously submitted API request.
-    #
-    # You should not call this method directly, but instead use one of the
-    # helper methods below.
-    #
-    def self.perform_action(action, arg)
-      c = Curl::Easy.new("https://api.ziprecruiter.com/job-alerts/v1/#{action.to_s}")
-      c.http_auth_types = :basic
-      c.userpwd = "#{@@api_key}:"
-
-      case action
-      when :subscribe, :unsubscribe
-        c.multipart_form_post = true
-        c.http_post(Curl::PostField.file('content', arg.to_s))
-      when :status
-        c.url += "/#{arg.to_s}"
-        c.perform
-      else
-        raise "Unknown action \"#{action.to_s}\"."
-      end
-
-      c.body_str
-    end
-
-    ##
-    # A Subscribe action is used to upload a collection of job seekers to subscribe to our job alerts program.
-    #
-    def self.subscribe(path)
-      ZipRecruiter::API.perform_action :subscribe, path
-    end
-
-    ##
-    # An Unsubscribe action is used to upload a collection of job seekers to unsubscribe from our job alerts program.
-    #
-    def self.unsubscribe(path)
-      ZipRecruiter::API.perform_action :unsubscribe, path
-    end
-
-    ##
-    # A Status action returns the current status of a previously-submitted request.
-    #
-    def self.status(task_id)
-      ZipRecruiter::API.perform_action :status, task_id
+    def self.api_key
+      @@api_key
     end
   end
 end
