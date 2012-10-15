@@ -3,7 +3,7 @@ require 'zip_recruiter/api'
 
 module ZipRecruiter
   module JobAlerts
-    class API
+    class API < ZipRecruiter::API
       ##
       # Performs the specified API action.
       #
@@ -23,15 +23,22 @@ module ZipRecruiter
       def self.perform_action(action, arg)
         c = Curl::Easy.new("https://api.ziprecruiter.com/job-alerts/v1/#{action.to_s}")
         c.http_auth_types = :basic
-        c.userpwd = "#{ZipRecruiter::API.api_key}:"
+        c.userpwd = "#{api_key}:"
 
         case action
         when :subscribe, :unsubscribe
+          path = File.expand_path(arg.to_s)
+          if !File.exists?(path)
+            raise "File \"#{path}\" does not exist."
+          end
+
           c.multipart_form_post = true
-          c.http_post(Curl::PostField.file('content', arg.to_s))
+          c.http_post(Curl::PostField.file('content', path.to_s)) # http_post calls perform
+
         when :status
           c.url += "/#{arg.to_s}"
           c.perform
+
         else
           raise "Unknown action \"#{action.to_s}\"."
         end
