@@ -20,7 +20,7 @@ Or install it yourself as:
 
 Run the following to display CLI usage:
 
-    $ zip_recruiter
+    $ ziprecruiter
 
 Additionally, you may use the ZipRecruiter::API class directly in a ruby
 script.
@@ -39,6 +39,6 @@ script.
 
 There is a bug in Thor (see
 [issue 261](https://github.com/wycats/thor/issues/261)) where the help command
-for a subcommand will display the subcommand with underscores if the class is
-CamelCase. E.g., `$ ziprecruiter jobalerts` shows `ziprecruiter job_alerts` in
-the help command's output.
+for a subcommand will display the wrong name for the subcommand due to the way
+it generates the help output. E.g., `$ ziprecruiter jobalerts` shows
+`ziprecruiter c_l_i` in the output.
