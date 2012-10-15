@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["adam@cloudspace.com"]
   gem.description   = %q{Provides a ruby interface to the ZipRecruiter Job Alerts API.}
   gem.summary       = %q{Ruby ZipRecruiter Job Alerts API interface}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/adamdunson/zip_recruiter/"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
