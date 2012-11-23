@@ -12,7 +12,7 @@ module ZipRecruiter
       def subscribe(path)
         ZipRecruiter::API.api_key = options[:api_key] unless options[:api_key].nil?
         if File.exists?(path)
-          p ZipRecruiter::JobAlerts::API.subscribe(path)
+          puts ZipRecruiter::JobAlerts::API.subscribe(path)
         else
           puts "File \"#{path}\" does not exist."
         end
@@ -22,7 +22,7 @@ module ZipRecruiter
       def unsubscribe(path)
         ZipRecruiter::API.api_key = options[:api_key] unless options[:api_key].nil?
         if File.exists?(path)
-          p ZipRecruiter::JobAlerts::API.unsubscribe(path)
+          puts ZipRecruiter::JobAlerts::API.unsubscribe(path)
         else
           puts "File \"#{path}\" does not exist."
         end
@@ -31,7 +31,7 @@ module ZipRecruiter
       desc "status [TASK_ID]", "A Status action returns the current status of a previously-submitted request."
       def status(task_id)
         ZipRecruiter::API.api_key = options[:api_key] unless options[:api_key].nil?
-        p ZipRecruiter::JobAlerts::API.status(task_id)
+        puts ZipRecruiter::JobAlerts::API.status(task_id)
       end
     end
   end

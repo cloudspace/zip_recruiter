@@ -1,4 +1,7 @@
-require 'curb'
+require 'json'
+require 'net/http'
+require 'securerandom'
+require 'uri'
 require 'zip_recruiter/api'
 
 module ZipRecruiter
@@ -20,30 +23,50 @@ module ZipRecruiter
       # You should not call this method directly, but instead use one of the
       # helper methods below.
       #
+      # See also: http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
+      #
       def self.perform_action(action, arg)
-        c = Curl::Easy.new("https://api.ziprecruiter.com/job-alerts/v1/#{action.to_s}")
-        c.http_auth_types = :basic
-        c.userpwd = "#{api_key}:"
+        uri = URI.parse("https://api.ziprecruiter.com/job-alerts/v1/#{action.to_s}")
 
         case action
         when :subscribe, :unsubscribe
-          path = File.expand_path(arg.to_s)
-          if !File.exists?(path)
-            raise "File \"#{path}\" does not exist."
+          if !File.exists?(arg.to_s)
+            raise "File \"#{arg.to_s}\" does not exist."
           end
 
-          c.multipart_form_post = true
-          c.http_post(Curl::PostField.file('content', path.to_s)) # http_post calls perform
+          file = File.new(File.expand_path(arg.to_s))
+
+          boundary = SecureRandom.urlsafe_base64
+
+          post_body = []
+          post_body << "--#{boundary}\r\n"
+          post_body << "Content-Disposition: form-data; name=\"content\"; filename=\"#{File.basename(file.path)}\"\r\n"
+          post_body << "Content-Type: text/csv\r\n"
+          post_body << "\r\n"
+          post_body << file.read
+          post_body << "\r\n--#{boundary}--\r\n"
+
+          request = Net::HTTP::Post.new(uri.request_uri)
+          request.body = post_body.join
+          request.content_type = "multipart/form-data; boundary=#{boundary}"
+
+          file.close
 
         when :status
-          c.url += "/#{arg.to_s}"
-          c.perform
-
+          uri = URI.parse("#{uri.to_s}/#{arg.to_s}")
+          request = Net::HTTP::Get.new(uri.request_uri)
         else
           raise "Unknown action \"#{action.to_s}\"."
         end
 
-        c.body_str
+        request.basic_auth(api_key, "")
+
+        http = Net::HTTP.new(uri.hostname, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        response = http.request(request)
+
+        JSON.pretty_generate(JSON.load(response.body))
       end
 
       ##
