@@ -6,7 +6,6 @@ require 'zip_recruiter/job_alerts/cli'
 describe ZipRecruiter::JobAlerts::CLI do
   before :each do
     $stdout = StringIO.new # redirect stdout
-    ZipRecruiter::API.api_key = '' # might not need this?
     @jobalerts_cli = ZipRecruiter::JobAlerts::CLI.new
     ZipRecruiter::JobAlerts::API.stub(:subscribe)
     ZipRecruiter::JobAlerts::API.stub(:unsubscribe)

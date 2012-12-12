@@ -63,7 +63,6 @@ module ZipRecruiter
 
         http = Net::HTTP.new(uri.hostname, uri.port)
         http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         response = http.request(request)
 
         JSON.pretty_generate(JSON.load(response.body))

@@ -4,18 +4,28 @@ require 'zip_recruiter/job_alerts/api'
 
 describe ZipRecruiter::JobAlerts::API do
   before :each do
-    ZipRecruiter::API.api_key = '' # might not need this?
-    @curl_easy = mock Curl::Easy
-    Curl::Easy.stub(:new).and_return(@curl_easy)
-    Curl::PostField.stub(:file)
-    @curl_easy.stub(:http_auth_types=)
-    @curl_easy.stub(:userpwd=)
-    @curl_easy.stub(:url).and_return("")
-    @curl_easy.stub(:url=)
-    @curl_easy.stub(:multipart_form_post=)
-    @curl_easy.stub(:http_post)
-    @curl_easy.stub(:perform)
-    @curl_easy.stub(:body_str)
+    @json = mock JSON
+    @net_http = mock Net::HTTP
+    @net_http_post = mock Net::HTTP::Post
+    @net_http_get = mock Net::HTTP::Get
+    @net_httpresponse = mock Net::HTTPResponse
+    @json.stub(:pretty_generate)
+    @json.stub(:load)
+    @net_http.stub(:new)
+    @net_http.stub(:use_ssl=)
+    @net_http.stub(:request)
+    @net_http_post.stub(:new)
+    @net_http_post.stub(:body=)
+    @net_http_post.stub(:content_type=)
+    @net_http_post.stub(:basic_auth)
+    @net_http_get.stub(:new)
+    @net_http_get.stub(:basic_auth)
+    @net_httpresponse.stub(:body)
+    @file = mock File
+    @file.stub(:expand_path)
+    @file.stub(:path)
+    @file.stub(:read).and_return("")
+    @file.stub(:close)
   end
 
   describe "#perform_action" do
@@ -24,32 +34,32 @@ describe ZipRecruiter::JobAlerts::API do
     end
 
     it "works when called with subscribe and a good file path" do
-      File.stub(:exists?).and_return(true) # pretend the file exists
-      @curl_easy.should_receive(:http_post)
-      @curl_easy.should_receive(:body_str)
+      @file.stub(:exists?).and_return(true)
+      @net_http.should_receive(:request)
+      @net_httpresponse.should_receive(:body)
       ZipRecruiter::JobAlerts::API.perform_action(:subscribe, '/path/to/good/file.csv')
     end
 
     it "raises an exception when called with subscribe and a bad file path" do
-      File.stub(:exists?).and_return(false) # pretend the file does not exist
+      @file.stub(:exists?).and_return(false)
       lambda { ZipRecruiter::JobAlerts::API.perform_action(:subscribe, "/path/to/bad/file.csv") }.should raise_error
     end
 
     it "works when called with unsubscribe and a good file path" do
-      File.stub(:exists?).and_return(true) # pretend the file exists
-      @curl_easy.should_receive(:http_post)
-      @curl_easy.should_receive(:body_str)
+      @file.stub(:exists?).and_return(true)
+      @net_http.should_receive(:request)
+      @net_httpresponse.should_receive(:body)
       ZipRecruiter::JobAlerts::API.perform_action(:unsubscribe, '/path/to/good/file.csv')
     end
 
     it "raises an exception when called with unsubscribe and a bad file path" do
-      File.stub(:exists?).and_return(false) # pretend the file does not exist
+      @file.stub(:exists?).and_return(false)
       lambda { ZipRecruiter::JobAlerts::API.perform_action(:unsubscribe, "/path/to/bad/file.csv") }.should raise_error
     end
 
     it "works when called with status and a string argument" do
-      @curl_easy.should_receive(:perform)
-      @curl_easy.should_receive(:body_str)
+      @net_http.should_receive(:request)
+      @net_httpresponse.should_receive(:body)
       ZipRecruiter::JobAlerts::API.perform_action(:status, "foobar")
     end
   end
