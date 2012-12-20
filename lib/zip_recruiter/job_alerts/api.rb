@@ -47,14 +47,14 @@ module ZipRecruiter
       end
 
       ##
-      # A Subscribe action is used to upload a collection of job seekers to subscribe to our job alerts program.
+      # A Subscribe action is used to upload a collection of job seekers to subscribe to the job alerts program.
       #
       def self.subscribe(path)
         ZipRecruiter::JobAlerts::API.perform_action :subscribe, path
       end
 
       ##
-      # An Unsubscribe action is used to upload a collection of job seekers to unsubscribe from our job alerts program.
+      # An Unsubscribe action is used to upload a collection of job seekers to unsubscribe from the job alerts program.
       #
       def self.unsubscribe(path)
         ZipRecruiter::JobAlerts::API.perform_action :unsubscribe, path
