@@ -7,6 +7,12 @@ require 'zip_recruiter/job_alerts/api'
 module ZipRecruiter
   module JobAlerts
     class CLI < Thor
+      # Hack to override the help message produced by Thor.
+      # https://github.com/wycats/thor/issues/261#issuecomment-16880836
+      def self.banner(command, namespace = nil, subcommand = nil)
+        "#{basename} jobalerts #{command.usage}"
+      end
+
       class_option :api_key, :aliases => "-k", :desc => "Specify your ZipRecruiter Job Alerts API key."
 
       desc "subscribe [PATH]", "A Subscribe action is used to upload a collection of job seekers to subscribe to the ZipRecruiter job alerts program."
