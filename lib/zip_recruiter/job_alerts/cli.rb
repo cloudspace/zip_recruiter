@@ -13,8 +13,6 @@ module ZipRecruiter
         "#{basename} jobalerts #{command.usage}"
       end
 
-      class_option :api_key, :aliases => "-k", :desc => "Specify your ZipRecruiter Job Alerts API key."
-
       desc "subscribe [PATH]", "A Subscribe action is used to upload a collection of job seekers to subscribe to the ZipRecruiter job alerts program."
       def subscribe(path)
         ZipRecruiter::API.api_key = options[:api_key] unless options[:api_key].nil?

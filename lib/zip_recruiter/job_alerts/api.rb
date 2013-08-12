@@ -17,9 +17,6 @@ module ZipRecruiter
       # path to a CSV file. The +status+ action requires an argument that is the
       # task ID of a previously submitted API request.
       #
-      # You should not call this method directly, but instead use one of the
-      # helper methods below.
-      #
       def self.perform_action(action, arg)
         c = Curl::Easy.new("https://api.ziprecruiter.com/job-alerts/v1/#{action.to_s}")
         c.http_auth_types = :basic
