@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = ZipRecruiter::VERSION
   gem.authors       = ["Adam Dunson"]
   gem.email         = ["adam@cloudspace.com"]
-  gem.description   = %q{Provides a ruby interface to the ZipRecruiter Job Alerts API.}
+  gem.description   = %q{Provides a CLI and ruby interface to the ZipRecruiter Job Alerts API.}
   gem.summary       = %q{Ruby ZipRecruiter Job Alerts API interface}
   gem.homepage      = "https://github.com/adamdunson/zip_recruiter/"
 

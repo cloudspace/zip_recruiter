@@ -23,9 +23,15 @@ Run the following to display CLI usage:
     $ ziprecruiter
 
 Additionally, you may use the ZipRecruiter::API class directly in a ruby
-script.
+script, e.g.:
 
-    require 'zip_recruiter'
+```ruby
+require 'zip_recruiter'
+ZipRecruiter::API.api_key = 'your-api-key'
+ZipRecruiter::JobAlerts::API.subscribe '/path/to/file.csv'
+ZipRecruiter::JobAlerts::API.unsubscribe '/path/to/file.csv'
+ZipRecruiter::JobAlerts::API.status 'task-id'
+```
 
 ## Contributing
 
@@ -34,11 +40,3 @@ script.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-## Notes
-
-There is a bug in Thor (see
-[issue 261](https://github.com/wycats/thor/issues/261)) where the help command
-for a subcommand will display the wrong name for the subcommand due to the way
-it generates the help output. E.g., `$ ziprecruiter jobalerts` shows
-`ziprecruiter c_l_i` in the output.
